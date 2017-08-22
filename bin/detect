@@ -1,0 +1,11 @@
+#!/bin/bash
+
+build_dir=${1}
+
+hart_files=$(ls ${build_dir}/*.hart | wc -l | tr -d '[:space:]')
+
+if [[ ${hart_files} > "0" ]]; then
+  echo "Habitat"
+else
+  exit 1
+fi

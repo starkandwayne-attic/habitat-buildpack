@@ -13,7 +13,10 @@ buildpack=$(cd "$(dirname $0)/.." && pwd)
 set -x
 echo "-----> Installing latest stable Habitat"
 archive="archive.tar.gz"
-wget -O ${archive}  'https://api.bintray.com/content/habitat/stable/linux/x86_64/hab-%24latest-x86_64-linux.tar.gz?bt_package=hab-x86_64-linux'
+
+# wget -O ${archive}  'https://api.bintray.com/content/habitat/stable/linux/x86_64/hab-%24latest-x86_64-linux.tar.gz?bt_package=hab-x86_64-linux'
+# Use unstable build containing HAB_NON_ROOT fix
+wget -O ${archive} 'https://api.bintray.com/content/habitat/unstable/linux/x86_64/hab-0.31.0-dev-20170901222655-x86_64-linux.tar.gz?bt_package=hab-x86_64-linux'
 
 tar -xvzf "${archive}"
 _hab="$(ls hab-*-linux/hab)"
@@ -22,7 +25,7 @@ cp ./${_hab} ${build}/bin/hab
 
 ln -sf /hab ${build}/hab
 
-sudo ${build}/bin/hab pkg install ${build}/*.hart
+HAB_NON_ROOT=true ${build}/bin/hab pkg install ${build}/*.hart
 
 mkdir -p $build/.profile.d
 cat <<EOT > $build_dir/.profile.d/habitat.sh
